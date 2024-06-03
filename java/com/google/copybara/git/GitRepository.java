@@ -491,12 +491,15 @@ public class GitRepository {
       args.add(ref);
     }
 
+    args.add("--update-shallow");
+
     ImmutableMap<String, GitRevision> before = showRef();
     CommandOutputWithStatus output = gitAllowNonZeroExit(NO_INPUT, args, repoTimeout);
     if (output.getTerminationStatus().success()) {
       ImmutableMap<String, GitRevision> after = showRef();
       return new FetchResult(before, after);
     }
+
     checkFetchError(output.getStderr(), url, requestedRefs);
     throw throwUnknownGitError(output, args);
   }
